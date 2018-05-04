@@ -1,0 +1,50 @@
+.Highscore ul li {
+    list-style-type: none;
+    outline: 1px solid red;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.Highscore .avatar {
+    margin-left: 20px;
+    width: 30px;
+    height: 30px;
+}
+
+.Highscore .rankHeader {
+    margin-left: 20px;
+    width: 100px;
+}
+
+.Highscore .rank {
+    margin-left: 20px;
+    width: 100px;
+}
+
+.Highscore .playerHeader {
+    margin-left: 20px;
+}
+
+.Highscore .player {
+    margin-left: 10px;
+}
+
+.Highscore .scoreHeader {
+    width: 100px;
+}
+
+.Highscore .score {
+    width: 100px;
+}
+
+.Highscore .userStats {
+    outline: 1px solid red;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.Highscore .personalHighscore {
+    margin-left: 20px;
+}
