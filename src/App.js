@@ -69,6 +69,15 @@ class App extends Component {
         this.setState({ viewQuiz: false, viewHighscore: false, viewProfile: true });
     }
 
+    enableUserListener() {
+        this.state.database.ref("users/" + this.state.user.uid + "/name").on("value", snapshot => {
+            let newUser = this.state.user;
+            newUser.name = snapshot.val();
+
+            this.setState({ user: newUser });
+        });
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -78,9 +87,9 @@ class App extends Component {
                     handleViewProfile={this.handleViewProfile}
                     activeTab={ this.state.viewQuiz ? "Quiz" : this.state.viewHighscore ? "Highscore" : "Profile" }
                 />
-                <Quiz visible={this.state.viewQuiz} />
+                <Quiz visible={this.state.viewQuiz} database={this.state.database} />
                 { this.state.viewHighscore && <Highscore database={this.state.database} user={this.state.user} /> }
-                { this.state.viewProfile && <Profile user={this.state.user} /> }
+                { this.state.viewProfile && <Profile database={this.state.database} user={this.state.user} /> }
             </React.Fragment>
         );
     }

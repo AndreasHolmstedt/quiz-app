@@ -1,3 +1,13 @@
 .Quiz {
     text-align: center;
+    background: rgb(219, 219, 219);
+    max-width: 500px;
+    margin: 0 auto;
+    padding-bottom: 25px;
+}
+
+.Quiz hr.timer {
+    border: none;
+    border-top: 5px solid rgb(21, 255, 0);
+    margin-bottom: 20px;
 }
