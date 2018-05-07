@@ -43,13 +43,13 @@ class Highscore extends Component {
                 { this.state.isLoading
                     ? <h2>Loading Highscores...</h2>
                     :   <ul>
-                            { this.props.user.uid 
+                            { this.props.user.uid
                                 ?   <li>
-                                        <img className="avatar" src={this.props.user.avatar} alt="avatar" />
+                                        <img className="avatar" src={this.props.user.photoURL} alt="avatar" />
                                         <p className="player">You</p>
                                         <h3 className="personalHighscore">Your Highscore: {this.props.user.highscore}</h3>
                                     </li>
-                                : null 
+                                : null
                             }
                             <li className="header">
                                 <p className="rankHeader">Rank</p>
