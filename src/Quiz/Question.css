@@ -1,0 +1,24 @@
+.Question button {
+    outline: none;
+    width: 150px;
+    height: 65px;
+    margin: 5px;
+    border: none;
+    background: rgb(158, 82, 82);
+    color: white;
+}
+
+.Question button:hover {
+    cursor: pointer;
+    background: rgb(218, 114, 114);
+}
+
+.Question .answers {
+    display: flex;
+    margin: 0 auto;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 320px;
+    margin-top: 25px;
+}

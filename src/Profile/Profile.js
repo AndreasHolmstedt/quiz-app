@@ -6,14 +6,7 @@ class Profile extends Component {
         super(props);
         this.state = {
             edit: false,
-            isLoggedIn: false,
             newName: ""
-        }
-    }
-
-    componentWillMount() {
-        if(this.props.user.uid) {
-            this.setState({ isLoggedIn: true });
         }
     }
 
@@ -22,8 +15,8 @@ class Profile extends Component {
     }
 
     handleNameChange = event => {
-        console.log("jh");
-        //db.ref("users/" + this.props.user.uid + "/name").set(value);
+        this.props.database.ref("users/" + this.props.user.uid + "/name").set(this.state.newName);
+        this.cancelNameChange();
     }
 
     cancelNameChange = event => {
@@ -46,7 +39,7 @@ class Profile extends Component {
     render() {
         return (
             <div className="Profile">
-                { this.state.isLoggedIn
+                { this.props.user.isLoggedIn
                     ?   
                         <React.Fragment>
                             <h2>My Profile</h2>

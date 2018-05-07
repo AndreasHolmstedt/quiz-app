@@ -1,13 +1,17 @@
 nav {
+    margin: 0 auto;
     margin-top: 50px;
     margin-bottom: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 320px;
 }
 
 nav button {
-    padding: 15px 40px;
+    padding: 15px 30px;
     outline: none;
     border: none;
     background: rgb(56, 56, 56);
