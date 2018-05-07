@@ -16,8 +16,8 @@ class App extends Component {
                 database: fire.database(),
                 user: {
                     highscore: 270,
-                    name: "Wicked",
-                    avatar: "http://avatarbox.net/avatars/img19/47_face_avatar_picture_12669.jpg",
+                    displayName: "Wicked",
+                    photoURL: "http://avatarbox.net/avatars/img19/47_face_avatar_picture_12669.jpg",
                     uid: "uid",
                     isLoggedIn: true
                 },
@@ -40,9 +40,9 @@ class App extends Component {
     }
 
     enableUserListener() {
-        this.state.database.ref("users/" + this.state.user.uid + "/name").on("value", snapshot => {
+        this.state.database.ref("users/" + this.state.user.uid + "/displayName").on("value", snapshot => {
             let newUser = this.state.user;
-            newUser.name = snapshot.val();
+            newUser.displayName = snapshot.val();
 
             this.setState({ user: newUser });
         });

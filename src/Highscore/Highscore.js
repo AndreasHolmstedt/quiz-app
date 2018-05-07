@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './Highscore.css';
+import Question from '../Quiz/Question';
 
 class Highscore extends Component {
     constructor(props) {
@@ -18,7 +19,9 @@ class Highscore extends Component {
 
             for(let user in users) {
                 if(users.hasOwnProperty(user)) {
-                    scores.push(users[user]);
+                    if(users[user].highscore > 0) {
+                        scores.push(users[user]);
+                    }
                 }
             }
 
@@ -45,7 +48,7 @@ class Highscore extends Component {
                     :   <ul>
                             { this.props.user.uid 
                                 ?   <li>
-                                        <img className="avatar" src={this.props.user.avatar} alt="avatar" />
+                                        <img className="avatar" src={this.props.user.photoURL} alt="avatar" />
                                         <p className="player">You</p>
                                         <h3 className="personalHighscore">Your Highscore: {this.props.user.highscore}</h3>
                                     </li>
@@ -57,11 +60,11 @@ class Highscore extends Component {
                                 <p className="playerHeader">Player</p>
                             </li>
                             { this.state.highscores.map( (player, index) => (
-                                    <li key={player.nick}>
+                                    <li key={index + "" + player.displayName}>
                                         <h3 className="rank">{index+1}</h3>
                                         <h3 className="score">{player.highscore}</h3>
-                                        <img className="avatar" src={player.img} alt="avatar"  />
-                                        <p className="player">{player.nick}</p>
+                                        <img className="avatar" src={player.photoURL} alt="avatar" onError={(e)=>{e.target.src="http://www.zimphysio.org.zw/wp-content/uploads/2018/01/default-avatar-2.jpg"}} />
+                                        <p className="player">{player.displayName}</p>
                                     </li> )
                                 )
                             }
