@@ -8,23 +8,53 @@ import Profile from "./Profile/Profile.js";
 import Highscore from "./Highscore/Highscore.js";
 
 import fire from "./fire.js";
+import firebase from 'firebase';
 
 class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
                 database: fire.database(),
-                user: {
-                    highscore: 270,
-                    displayName: "Wicked",
-                    photoURL: "http://avatarbox.net/avatars/img19/47_face_avatar_picture_12669.jpg",
-                    uid: "uid",
-                    isLoggedIn: true
-                },
+                user: {},
                 viewQuiz: true,
                 viewHighscore: false,
                 viewProfile: false
         };
+
+    }
+
+    componentWillMount(){
+        firebase.auth().onAuthStateChanged(userObj => {
+            if(userObj) {
+                this.state.database.ref(`users/${userObj.uid}`).once("value", snap => {
+                    let data = snap.val();
+
+                    if(data === null) {
+                        let user = {
+                            email: userObj.email,
+                            displayName: userObj.displayName,
+                            photoURL: userObj.photoURL,
+                            uid: userObj.uid,
+                            highscore: 0,
+                        }
+                        this.state.database.ref(`users/${userObj.uid}`).set(user);
+                    }
+                });
+
+                this.state.database.ref(`users/${userObj.uid}`).once("value", snap => {
+                    let data = snap.val();
+                    this.setState({ user: data })
+                });
+
+                this.state.database.ref(`users/${userObj.uid}`).on("child_changed", snap => {
+                    let data = snap.val()
+                    this.setState({ user: data })
+                });
+            } 
+            else {
+                this.setState({user: {}})
+            }
+        });
     }
 
     handleViewQuiz = event => {
@@ -39,22 +69,13 @@ class App extends Component {
         this.setState({ viewQuiz: false, viewHighscore: false, viewProfile: true });
     }
 
-    enableUserListener() {
-        this.state.database.ref("users/" + this.state.user.uid + "/displayName").on("value", snapshot => {
-            let newUser = this.state.user;
-            newUser.displayName = snapshot.val();
-
-            this.setState({ user: newUser });
-        });
-    }
-
     render() {
         return (
             <React.Fragment>
-                <Navigation 
-                    handleViewQuiz={this.handleViewQuiz} 
-                    handleViewHighscore={this.handleViewHighscore} 
-                    handleViewProfile={this.handleViewProfile} 
+                <Navigation
+                    handleViewQuiz={this.handleViewQuiz}
+                    handleViewHighscore={this.handleViewHighscore}
+                    handleViewProfile={this.handleViewProfile}
                     activeTab={ this.state.viewQuiz ? "Quiz" : this.state.viewHighscore ? "Highscore" : "Profile" }
                 />
                 <Quiz visible={this.state.viewQuiz} database={this.state.database} />

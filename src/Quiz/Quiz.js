@@ -12,7 +12,9 @@ class Quiz extends Component {
             timer: 0,
             maxQuestions: 30,
             currentQuestion: 1,
-            questions: []
+            questions: [],
+            userChoice: null,
+            correctAnswer: null
         };
     }
 
@@ -43,16 +45,40 @@ class Quiz extends Component {
         });
     }
 
-    simulateActivate = e => {
-        this.setState({ active: true, timer: 30 });
+    startQuiz = e => {
+        this.setState({ active: true, timer: 5 });
         let component = this;
 
         let time = setInterval(function() {
             component.setState({ timer: (component.state.timer - 1) });
             if(component.state.timer === 0) {
                 clearInterval(time);
+
+                component.lockQuestion();
+                component.showWinningOption();
             }
         }, 1000);
+    }
+
+    lockQuestion = e => {
+        this.setState({ inactive: true });
+    }
+
+    showWinningOption = e => {
+        this.props.database.ref("questions/" + this.state.questions[this.state.currentQuestion-1].title).once("value", snapshot => {
+            let data = snapshot.val();
+            for(let answer in data) {
+                if(data.hasOwnProperty(answer)) {
+                    if(data[answer]) {
+                        this.setState({ correctAnswer: answer });
+                    }
+                }
+            }
+        });
+    }
+
+    handleSelectAnswer = e => {
+        console.log(e.target.innerText); // Logs the answer so you can insert it as the choice and check with correct answer.
     }
 
     render() {
@@ -63,11 +89,11 @@ class Quiz extends Component {
                 { this.state.active 
                     ?   <React.Fragment>
                             <hr className="timer" style={{ width: (this.state.timer*3.33) + "%" }} />
-                            <Question details={this.state.questions[this.state.currentQuestion-1]} />
+                            <Question handleSelectAnswer={this.handleSelectAnswer} details={this.state.questions[this.state.currentQuestion-1]} inactive={this.state.timer === 0 ? true : false} answer={this.state.correctAnswer} />
                         </React.Fragment>
                     :   <React.Fragment>
                             <h2>Quiz</h2>
-                            <button onClick={this.simulateActivate}>Activate</button>
+                            <button onClick={this.startQuiz}>Start Quiz</button>
                         </React.Fragment>
                 }
                 {

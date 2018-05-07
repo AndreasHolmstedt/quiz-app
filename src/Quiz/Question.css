@@ -13,6 +13,21 @@
     background: rgb(218, 114, 114);
 }
 
+.Question button.correct {
+    cursor: auto;
+    background: green;
+}
+
+.Question button.incorrect {
+    cursor: auto;
+    background: red;
+}
+
+.Question button.inactive {
+    cursor: auto;
+    background: rgb(53, 53, 53);
+}
+
 .Question .answers {
     display: flex;
     margin: 0 auto;
