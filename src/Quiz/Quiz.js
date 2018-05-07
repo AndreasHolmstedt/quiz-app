@@ -6,7 +6,7 @@ class Quiz extends Component {
         super(props);
         this.state = {
                 score: 0,
-                activeTab: "highscore"
+                active: false
         };
     }
 
@@ -16,7 +16,7 @@ class Quiz extends Component {
 
         return (
             <div className={classes}>
-                <p>Quiz</p>
+                <h2>Quiz</h2>
                 {//timer
                 //spelarens poäng i pågående quiz
                 //vilken fråga av hur många

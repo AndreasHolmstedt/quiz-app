@@ -13,15 +13,17 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-                database: null,
+                database: fire.database(),
+                user: {
+                    highscore: 270,
+                    name: "Wicked",
+                    avatar: "http://avatarbox.net/avatars/img19/47_face_avatar_picture_12669.jpg",
+                    uid: "xyz"
+                },
                 viewQuiz: true,
                 viewHighscore: false,
                 viewProfile: false
         };
-    }
-
-    componentDidMount() {
-         this.setState({ database: fire.database() });
     }
 
     handleViewQuiz = event => {
@@ -38,12 +40,17 @@ class App extends Component {
 
     render() {
         return (
-            <div className="App">
-                <Navigation handleViewQuiz={this.handleViewQuiz} handleViewHighscore={this.handleViewHighscore} handleViewProfile={this.handleViewProfile} />
+            <React.Fragment>
+                <Navigation 
+                    handleViewQuiz={this.handleViewQuiz} 
+                    handleViewHighscore={this.handleViewHighscore} 
+                    handleViewProfile={this.handleViewProfile} 
+                    activeTab={ this.state.viewQuiz ? "Quiz" : this.state.viewHighscore ? "Highscore" : "Profile" }
+                />
                 <Quiz visible={this.state.viewQuiz} />
-                { this.state.viewHighscore ? <Highscore database={this.state.database} /> : null }
-                { this.state.viewProfile ? <Profile /> : null }
-            </div>
+                { this.state.viewHighscore && <Highscore database={this.state.database} user={this.state.user} /> }
+                { this.state.viewProfile && <Profile user={this.state.user} /> }
+            </React.Fragment>
         );
     }
 }

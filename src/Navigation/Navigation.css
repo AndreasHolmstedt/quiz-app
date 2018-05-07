@@ -1,0 +1,25 @@
+nav {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+nav button {
+    padding: 15px 40px;
+    outline: none;
+    border: none;
+    background: rgb(56, 56, 56);
+    color: white;
+    border-top: 3px solid rgb(56, 56, 56);
+}
+
+nav button:hover {
+    background: rgb(85, 85, 85);
+    cursor: pointer;
+}
+
+nav button.active {
+    border-top: 3px solid red;
+}

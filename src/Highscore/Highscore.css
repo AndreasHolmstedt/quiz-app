@@ -1,9 +1,29 @@
+.Highscore h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.Highscore ul {
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
 .Highscore ul li {
     list-style-type: none;
-    outline: 1px solid red;
     display: flex;
     flex-direction: row;
     align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background: rgb(233, 233, 233);
+}
+
+.Highscore ul li.header {
+    background: rgb(207, 207, 207);
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-weight: bold;
 }
 
 .Highscore .avatar {
@@ -38,13 +58,6 @@
     width: 100px;
 }
 
-.Highscore .userStats {
-    outline: 1px solid red;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
 .Highscore .personalHighscore {
-    margin-left: 20px;
+    margin-left: 30px;
 }

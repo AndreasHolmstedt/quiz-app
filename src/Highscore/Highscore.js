@@ -13,57 +13,55 @@ class Highscore extends Component {
 
     componentDidMount() {
         this.props.database.ref("/users/").once("value", snapshot => {
-            let data = snapshot.val();
-            let highscores = [];
+            let users = snapshot.val();
+            let scores = [];
 
-            for(let score in data) {
-                if(data.hasOwnProperty(score)) {
-                    highscores.push(data[score]);
+            for(let user in users) {
+                if(users.hasOwnProperty(user)) {
+                    scores.push(users[user]);
                 }
             }
 
-            highscores.sort(this.sortHighscores);
+            scores.sort(this.sortHighscores);
 
-            this.setState({ highscores: highscores, isLoading: false });
+            this.setState({ highscores: scores, isLoading: false });
         });
     }
 
     sortHighscores(a, b) {
         if(a.highscore < b.highscore)
-            return -1;
-        if(a.highscore > b.highscore)
             return 1;
+        if(a.highscore > b.highscore)
+            return -1;
         return 0;
     }
 
     render() {
         return (
             <div className="Highscore">
-                <p>Highscore</p>
-                {
-                //spelarens highscore
-                //lista med högsta poäng för alla användare
-                }
-                <div className="userStats">
-                    <h3 className="personalHighscore">Your Highscore: 250</h3>
-                    <img className="avatar" src="http://avatarbox.net/avatars/img19/47_face_avatar_picture_12669.jpg" alt="avatar"  />
-                    <p className="player">You</p>
-                </div>
-                {
-                    this.state.isLoading
-                    ? <p>Loading Highscores...</p>
+                <h2>Highscores</h2>
+                { this.state.isLoading
+                    ? <h2>Loading Highscores...</h2>
                     :   <ul>
-                            <li>
+                            { this.props.user.uid 
+                                ?   <li>
+                                        <img className="avatar" src={this.props.user.avatar} alt="avatar" />
+                                        <p className="player">You</p>
+                                        <h3 className="personalHighscore">Your Highscore: {this.props.user.highscore}</h3>
+                                    </li>
+                                : null 
+                            }
+                            <li className="header">
                                 <p className="rankHeader">Rank</p>
                                 <p className="scoreHeader">Score</p>
                                 <p className="playerHeader">Player</p>
                             </li>
-                            { this.state.highscores.map( (score, index) => (
-                                    <li key={score.nick}>
+                            { this.state.highscores.map( (player, index) => (
+                                    <li key={player.nick}>
                                         <h3 className="rank">{index+1}</h3>
-                                        <h3 className="score">{score.highscore}</h3>
-                                        <img className="avatar" src={score.img} alt="avatar"  />
-                                        <p className="player">{score.nick}</p>
+                                        <h3 className="score">{player.highscore}</h3>
+                                        <img className="avatar" src={player.img} alt="avatar"  />
+                                        <p className="player">{player.nick}</p>
                                     </li> )
                                 )
                             }
