@@ -23,10 +23,10 @@ class Quiz extends Component {
         this.props.database.ref("questions/").once("value", snapshot => {
             let data = snapshot.val();
             let questions = [];
-            
+
             for(let question in data) {
                 if(data.hasOwnProperty(question)) {
-                    let details = { 
+                    let details = {
                         title: question,
                         answers: []
                     };
@@ -46,7 +46,7 @@ class Quiz extends Component {
     }
 
     startQuiz = e => {
-        this.setState({ active: true, timer: 5 });
+        this.setState({ active: true, timer: 30 });
         let component = this;
 
         let time = setInterval(function() {
@@ -83,12 +83,16 @@ class Quiz extends Component {
 
     render() {
         let classes = "Quiz " + (this.props.visible ? "" : "hidden");
+        const timerStyle = {
+          width: (this.state.timer*3.33) + "%",
+          background: this.state.timer > 10  ? "linear-gradient(to bottom, #A3E471 50%, #70C132 50%)" : null,
+        }
 
         return (
             <div className={classes}>
-                { this.state.active 
+                { this.state.active
                     ?   <React.Fragment>
-                            <hr className="timer" style={{ width: (this.state.timer*3.33) + "%" }} />
+                            <div className="timer"><div style={timerStyle} /></div>
                             <Question handleSelectAnswer={this.handleSelectAnswer} details={this.state.questions[this.state.currentQuestion-1]} inactive={this.state.timer === 0 ? true : false} answer={this.state.correctAnswer} />
                         </React.Fragment>
                     :   <React.Fragment>
