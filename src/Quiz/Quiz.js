@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './Quiz.css';
 
 import Question from "./Question.js";
+import CompletedQuestions from './CompletedQuestions.js'
 
 class Quiz extends Component {
     constructor(props) {
@@ -14,7 +15,8 @@ class Quiz extends Component {
             currentQuestion: 1,
             questions: [],
             userChoice: null,
-            correctAnswer: null
+            correctAnswer: null,
+            completedQuestions: [-1,-1,1,0,0,0,0,0,0,0]
         };
     }
 
@@ -78,6 +80,8 @@ class Quiz extends Component {
     }
 
     handleSelectAnswer = e => {
+        this.setState({ completedQuestions: [-1,-1,1,-1,0,0,0,0,0,0]})
+        console.log(this.state.completedQuestions)
         console.log(e.target.innerText); // Logs the answer so you can insert it as the choice and check with correct answer.
     }
 
@@ -92,6 +96,7 @@ class Quiz extends Component {
             <div className={classes}>
                 { this.state.active
                     ?   <React.Fragment>
+                            <CompletedQuestions completedQuestions={this.state.completedQuestions}/>
                             <div className="timer"><div style={timerStyle} /></div>
                             <Question handleSelectAnswer={this.handleSelectAnswer} details={this.state.questions[this.state.currentQuestion-1]} inactive={this.state.timer === 0 ? true : false} answer={this.state.correctAnswer} />
                         </React.Fragment>
