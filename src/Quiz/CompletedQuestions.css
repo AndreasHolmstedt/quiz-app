@@ -1,0 +1,40 @@
+.completedQuestions {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 350px;
+  margin: 1em;
+  border-bottom: 1px solid grey;
+
+}
+
+.completedQuestions > div {
+  width: 10px;
+  height: 10px;
+  display: inline;
+  border-radius: 100px;
+  margin: 10px;
+  box-shadow: 0px 2px 2px 0px rgba(0,0,0,.5)
+}
+
+.completedQuestions .correct {
+  transition: background-color 1s;
+  background-color: #75D56B;
+  width: 100%;
+  height: 100%;
+  border-radius: 100px;
+}
+
+.completedQuestions .wrong {
+  transition: background-color 1s;
+  border-radius: 100px;
+  background-color: #FB7E84;
+  height: 100%;
+}
+
+.completedQuestions .notAnswered {
+  transition: background-color 1s;
+  background-color: lightgrey;
+  height: 100%;
+  border-radius: 100px;
+}

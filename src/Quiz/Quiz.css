@@ -1,6 +1,6 @@
 .Quiz {
     text-align: center;
-    background: rgb(219, 219, 219);
+    background: #eaeaea;
     max-width: 500px;
     margin: 0 auto;
     padding-bottom: 25px;
@@ -41,4 +41,8 @@
    border-radius: 8px;
    background: linear-gradient(to bottom, #FFA5A5 50%, #F86565 50%);
    box-shadow: 1px 1px 1px grey;
+}
+
+.hidden {
+  display: none;
 }
