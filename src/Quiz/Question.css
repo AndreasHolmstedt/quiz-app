@@ -4,28 +4,23 @@
     height: 65px;
     margin: 5px;
     border: none;
-    background: rgb(158, 82, 82);
+    background: #7a51db;
     color: white;
 }
 
 .Question button:hover {
     cursor: pointer;
-    background: rgb(218, 114, 114);
+    background: #8457ed;
 }
 
 .Question button.correct {
     cursor: auto;
-    background: green;
+    background: #75D56B;
 }
 
 .Question button.incorrect {
     cursor: auto;
-    background: red;
-}
-
-.Question button.inactive {
-    cursor: auto;
-    background: rgb(53, 53, 53);
+    background: #FB7E84;
 }
 
 .Question .answers {
@@ -36,4 +31,13 @@
     flex-wrap: wrap;
     width: 320px;
     margin-top: 25px;
+}
+
+.Question h2 {
+    margin-top: 1em;
+}
+
+.Question {
+    padding-left: 2em;
+    padding-right: 2em;
 }

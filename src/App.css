@@ -1,0 +1,22 @@
+body {
+    background: #8968d8;
+}
+
+button {
+  display: inline-block;
+  padding: 1em;
+  border: none;
+  background: #6e49c6;
+  color: white;
+  padding: 1;
+  font-weight: 800;
+  transition: background-color 0.2s;
+  box-shadow: 0px 2px 2px 0px rgba(0,0,0,.5);
+  margin-top: 1em;
+  text-transform: capitalize;
+}
+
+button:hover {
+  background: #7a51db;
+  cursor: pointer;
+}

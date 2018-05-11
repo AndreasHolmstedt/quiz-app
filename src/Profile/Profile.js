@@ -15,19 +15,6 @@ class Profile extends Component {
         this.state = {
             edit: false,
             newName: "",
-            isLoggedIn: false
-        }
-    }
-
-
-    componentWillMount() {
-        if(this.props.user.uid) {
-            this.setState({ isLoggedIn: true });
-        }
-    }
-    componentWillReceiveProps(nextProps) {
-        if(this.props.user.uid) {
-            this.setState({ isLoggedIn: true });
         }
     }
 
@@ -36,7 +23,7 @@ class Profile extends Component {
     }
 
     handleNameChange = event => {
-        this.props.database.ref("users/" + this.props.user.uid + "/name").set(this.state.newName);
+        this.props.database.ref("users/" + this.props.user.uid + "/displayName").set(this.state.newName);
         this.cancelNameChange();
     }
 
@@ -50,45 +37,42 @@ class Profile extends Component {
     }
 
     handleLogout = event => {
-        firebase.auth().signOut().then(()=>{
-        //  this.setState({ isLoggedIn: false });
-        })
-        this.setState({ isLoggedIn: false });
+        firebase.auth().signOut().then(()=>{});
     }
 
     render() {
         return (
             <div className="Profile">
-                { this.state.isLoggedIn
+                { this.props.user.uid
                     ?
                         <React.Fragment>
                             <h2>My Profile</h2>
                             <img className="avatar" src={this.props.user.photoURL} alt="avatar" />
 
-                            { !this.state.edit && <p onClick={this.toggleEditMode} >{this.props.user.name}</p> }
-                            { this.state.edit
-                                &&  <React.Fragment>
-                                        <br />
-                                        <input type="text" value={this.state.newName} onChange={this.handleChange} />
-                                        <br />
-                                        <button onClick={this.cancelNameChange}>Discard Change</button>
-                                        <button onClick={this.handleNameChange}>Change Name</button>
-                                    </React.Fragment>
+                            { !this.state.edit &&
+                                <React.Fragment>
+                                    <p className="displayName" onClick={this.toggleEditMode} >{this.props.user.displayName}</p>
+                                    <p>Your Highscore: {this.props.user.highscore}</p>
+                                    <button onClick={this.handleLogout}>Sign Out</button>
+                                </React.Fragment>
                             }
-
-                            <p>Your Highscore: {this.props.user.highscore}</p>
-                            <button onClick={this.handleLogout}>Sign Out</button>
+                            { this.state.edit &&
+                                <React.Fragment>
+                                    <input className="newName" type="text" value={this.state.newName} onChange={this.handleChange} placeholder="New Name" />
+                                    <button className="discard" onClick={this.cancelNameChange}>Discard Change</button>
+                                    <button className="change" onClick={this.handleNameChange}>Change Name</button>
+                                </React.Fragment>
+                            }
                         </React.Fragment>
                     :
                         <React.Fragment>
-                            <h2>Not Logged In</h2>
+                            <h2>You are not signed in</h2>
                             <LoginEmail />
                             <div>
                                 <LoginFB />
                                 <LoginGmail />
                                 <LoginGithub />
                             </div>
-                            <h3>Create New User:</h3>
                             <CreateUser />
                         </React.Fragment>
                 }

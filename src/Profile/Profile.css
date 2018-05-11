@@ -3,6 +3,24 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    background: #7e5fc6;
+    padding-top: 2em;
+    padding-bottom: 2em;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.Profile h2 {
+    margin-bottom: 0.5em;
+}
+
+.Profile img {
+    margin-bottom: 1em;
+}
+
+.Profile .displayName {
+    margin-bottom: 0.5em;
+    font-weight: 600;
 }
 
 .Profile input {
@@ -12,26 +30,10 @@
     padding: .5em;
 }
 
-.Profile button {
-  display: inline-block;
-  margin: 1em;
-  padding: 1em;
-  border: none;
-  background-color: slategray;
-  color: white;
-  padding: 1;
-  font-weight: 800;
-  border: 2px solid slategray;
-  transition: background-color 1s;
-}
-
-
-.Profile button:hover {
-  border: 2px solid slategray;
-  background-color: white;
-  color: slategray;
-}
-
 img {
   height: 5em;
+}
+
+.Profile button {
+  margin: 1em;
 }

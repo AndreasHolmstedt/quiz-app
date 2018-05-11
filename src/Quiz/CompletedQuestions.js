@@ -16,10 +16,10 @@ class CompletedQuestions extends Component {
     render() {
       const listOfAnswers = this.state.completedQuestions.map(function(answer, index){
         return(
-            <div >
+            <div key={index}>
             {answer === 0 ? <div key={index} className="notAnswered"/> : null }
-            {answer === 1 ? <div key={index} className="correct" /> : null}
-            {answer === -1 ? <div key={index} className="wrong" /> : null}
+            {answer === 1 ? <div key={index} className="correct" /> : null }
+            {answer === -1 ? <div key={index} className="wrong" /> : null }
             </div>
           )
         })

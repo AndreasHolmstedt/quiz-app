@@ -9,19 +9,35 @@ class Quiz extends Component {
         super(props);
         this.state = {
             score: 0,
+            streak: 0,
+            quizCompleted: false,
             active: false,
+            questionActive: false,
             timer: 0,
-            maxQuestions: 30,
+            maxQuestions: 10,
             currentQuestion: 1,
             questions: [],
-            userChoice: null,
             correctAnswer: null,
-            completedQuestions: [-1,-1,1,0,0,0,0,0,0,0]
+            userChoice: null,
+            completedQuestions: [0,0,0,0,0,0,0,0,0,0]
         };
     }
 
+    shuffle(array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+        while (0 !== currentIndex) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+    }
+
     componentDidMount() {
-        // Fetch questions from database and add to state.questions
         this.props.database.ref("questions/").once("value", snapshot => {
             let data = snapshot.val();
             let questions = [];
@@ -30,12 +46,12 @@ class Quiz extends Component {
                 if(data.hasOwnProperty(question)) {
                     let details = {
                         title: question,
-                        answers: []
+                        answers: {}
                     };
 
                     for(let answer in data[question]) {
                         if(data[question].hasOwnProperty(answer)) {
-                            details.answers.push(answer);
+                            details.answers[answer] = data[question][answer];
                         }
                     }
 
@@ -43,53 +59,134 @@ class Quiz extends Component {
                 }
             }
 
-            this.setState({ questions: questions });
+            this.setState({ questions: this.shuffle(questions) });
         });
     }
 
     startQuiz = e => {
-        this.setState({ active: true, timer: 30 });
-        let component = this;
+        if(this.props.user.uid) {
+            this.getWinningOption();
+            this.setState({ quizCompleted: false, active: true, questionActive: true, timer: 30 });
+            let component = this;
 
-        let time = setInterval(function() {
-            component.setState({ timer: (component.state.timer - 1) });
-            if(component.state.timer === 0) {
-                clearInterval(time);
+            let time = setInterval(function() {
+                component.setState({ timer: Number((component.state.timer - 0.1).toFixed(1)) });
+                if(component.state.timer === 0) {
+                    clearInterval(time);
+                    component.lockQuestion();
 
-                component.lockQuestion();
-                component.showWinningOption();
-            }
-        }, 1000);
+                    let completed = component.state.completedQuestions;
+                    if(completed[component.state.currentQuestion-1] === 0) {
+                        completed[component.state.currentQuestion-1] = -1;
+                        component.setState({ completedQuestions: completed, streak: 0 });
+                    }
+
+                    if(component.state.currentQuestion === component.state.maxQuestions) {
+                        component.setState({ quizCompleted: true });
+                    }
+                }
+            }, 100);
+        }
     }
 
     lockQuestion = e => {
-        this.setState({ inactive: true });
+        this.setState({ questionActive: false });
     }
 
-    showWinningOption = e => {
-        this.props.database.ref("questions/" + this.state.questions[this.state.currentQuestion-1].title).once("value", snapshot => {
-            let data = snapshot.val();
-            for(let answer in data) {
-                if(data.hasOwnProperty(answer)) {
-                    if(data[answer]) {
-                        this.setState({ correctAnswer: answer });
-                    }
+    getWinningOption = e => {
+        let correct;
+
+        for(let answer in this.state.questions[this.state.currentQuestion-1].answers) {
+            if(this.state.questions[this.state.currentQuestion-1].answers.hasOwnProperty(answer)) {
+                if(this.state.questions[this.state.currentQuestion-1].answers[answer]) {
+                    correct = answer;
                 }
             }
-        });
+        }
+
+        this.setState({ correctAnswer: correct});
     }
 
     handleSelectAnswer = e => {
-        this.setState({ completedQuestions: [-1,-1,1,-1,0,0,0,0,0,0]})
-        console.log(this.state.completedQuestions)
-        console.log(e.target.innerText); // Logs the answer so you can insert it as the choice and check with correct answer.
+        if(this.state.questionActive) {
+            let completed = this.state.completedQuestions;
+
+            this.setState({ timer: 0.1, userChoice: e.target.innerText });
+
+            if(e.target.innerText === this.state.correctAnswer) {
+                let gainedScore = 1;
+                switch(this.state.streak) {
+                    case 2:
+                        gainedScore += 1;
+                        break;
+                    case 3:
+                        gainedScore += 1;
+                        break;
+                    case 4:
+                        gainedScore += 2;
+                        break;
+                    case 5:
+                        gainedScore += 2;
+                        break;
+                    case 6:
+                        gainedScore += 3;
+                        break;
+                    case 7:
+                        gainedScore += 3;
+                        break;
+                    case 8:
+                        gainedScore += 4;
+                        break;
+                    case 9:
+                        gainedScore += 4;
+                        break;
+                    default:
+                        break;
+                }
+
+                completed[this.state.currentQuestion-1] = 1;
+                this.setState({ completedQuestions: completed , streak: this.state.streak + 1, score: this.state.score + gainedScore });
+            } else {
+                completed[this.state.currentQuestion-1] = -1;
+                this.setState({ completedQuestions: completed, streak: 0, score: this.state.score - 1 });
+            }
+        }
+    }
+
+    handleNextQuestion = _ => {
+        if(this.state.quizCompleted) {
+            this.setState({ active: false });
+
+            if(this.state.score > this.props.user.highscore) {
+                this.props.database.ref(`users/${this.props.user.uid}/highscore`).set(this.state.score);
+            }
+        }
+        else {
+            this.setState({ currentQuestion: this.state.currentQuestion + 1 }, this.startQuiz);
+        }
+    }
+
+    resetQuiz = _ => {
+        this.setState({
+            score: 0,
+            streak: 0,
+            quizCompleted: false,
+            active: false,
+            questionActive: false,
+            timer: 0,
+            currentQuestion: 1,
+            questions: this.shuffle(this.state.questions),
+            correctAnswer: null,
+            userChoice: null,
+            completedQuestions: [0,0,0,0,0,0,0,0,0,0]
+        });
     }
 
     render() {
         let classes = "Quiz " + (this.props.visible ? "" : "hidden");
         const timerStyle = {
-          width: (this.state.timer*3.33) + "%",
-          background: this.state.timer > 10  ? "linear-gradient(to bottom, #A3E471 50%, #70C132 50%)" : null,
+          width: (this.state.timer*(10/3)) + "%",
+          background: this.state.timer > 10  ? "#70C132" : null,
         }
 
         return (
@@ -98,11 +195,30 @@ class Quiz extends Component {
                     ?   <React.Fragment>
                             <CompletedQuestions completedQuestions={this.state.completedQuestions}/>
                             <div className="timer"><div style={timerStyle} /></div>
-                            <Question handleSelectAnswer={this.handleSelectAnswer} details={this.state.questions[this.state.currentQuestion-1]} inactive={this.state.timer === 0 ? true : false} answer={this.state.correctAnswer} />
+                            <div className="info">
+                                <p>Score: {this.state.score}</p>
+                                <p>Streak: {this.state.streak}</p>
+                            </div>
+                            <Question
+                                handleSelectAnswer={this.handleSelectAnswer}
+                                details={this.state.questions[this.state.currentQuestion-1]}
+                                questionActive={this.state.timer === 0 ? false : true}
+                                answer={this.state.correctAnswer}
+                                userChoice={this.state.userChoice}
+                            />
+                            { this.state.active && !this.state.questionActive && <button onClick={this.handleNextQuestion}>{ this.state.quizCompleted ? "Show Score" : "Next Question"}</button> }
                         </React.Fragment>
-                    :   <React.Fragment>
+                    :
+                        this.state.quizCompleted
+                        ?   <React.Fragment>
+                                <h2>Score</h2>
+                                <p>You scored {this.state.score} points!</p>
+                                <button onClick={this.resetQuiz} >Play again!</button>
+                            </React.Fragment>
+                        :
+                        <React.Fragment>
                             <h2>Quiz</h2>
-                            <button onClick={this.startQuiz}>Start Quiz</button>
+                            <button disabled={this.state.questions.length === 0} onClick={this.startQuiz}>{ this.props.user.uid ? "Start Quiz" : "Must Be Logged In"}</button>
                         </React.Fragment>
                 }
                 {

@@ -1,3 +1,11 @@
+.Highscore {
+    background: #7e5fc6;
+    padding-top: 2em;
+    padding-bottom: 2em;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
 .Highscore h2 {
     text-align: center;
     margin-bottom: 20px;
@@ -15,11 +23,11 @@
     align-items: center;
     padding-top: 10px;
     padding-bottom: 10px;
-    background: rgb(233, 233, 233);
+    background: #7e5fc6;
 }
 
 .Highscore ul li.header {
-    background: rgb(207, 207, 207);
+    background: #6643b7;
     padding-top: 20px;
     padding-bottom: 20px;
     font-weight: bold;

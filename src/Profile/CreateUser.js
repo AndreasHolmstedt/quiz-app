@@ -59,7 +59,8 @@ class CreateUser extends Component {
 
   render(){
     return (
-      <div>
+      <div className="CreateUser">
+        <h3>Create New User:</h3>
         <div>
           <input type="text" value={this.state.name} onChange={this.handleNameChange} placeholder="Full name"/>
           <input type="text" value={this.state.email} onChange={this.handleEmailChange} placeholder="Email"/>

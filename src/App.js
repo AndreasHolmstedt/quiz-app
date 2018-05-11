@@ -48,9 +48,12 @@ class App extends Component {
 
                 this.state.database.ref(`users/${userObj.uid}`).on("child_changed", snap => {
                     let data = snap.val()
-                    this.setState({ user: data })
+                    let user = this.state.user;
+                    user.displayName = data;
+
+                    this.setState({ user: user })
                 });
-            } 
+            }
             else {
                 this.setState({user: {}})
             }
@@ -72,13 +75,14 @@ class App extends Component {
     render() {
         return (
             <React.Fragment>
+                <h1>Quiz App</h1>
                 <Navigation
                     handleViewQuiz={this.handleViewQuiz}
                     handleViewHighscore={this.handleViewHighscore}
                     handleViewProfile={this.handleViewProfile}
                     activeTab={ this.state.viewQuiz ? "Quiz" : this.state.viewHighscore ? "Highscore" : "Profile" }
                 />
-                <Quiz visible={this.state.viewQuiz} database={this.state.database} />
+                <Quiz visible={this.state.viewQuiz} database={this.state.database} user={this.state.user} />
                 { this.state.viewHighscore && <Highscore database={this.state.database} user={this.state.user} /> }
                 { this.state.viewProfile && <Profile database={this.state.database} user={this.state.user} /> }
             </React.Fragment>
